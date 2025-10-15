@@ -1,273 +1,128 @@
-﻿@using CuuLong.ViewModel
-@using Microsoft.Ajax.Utilities
-@model List<CuuLong.Models.News>
-
 @{
-    ViewBag.Title = "Trang Chủ";
-    var i = 0;
+    ViewData["Title"] = "Cửu Long Tranh Bá - Evolution Server";
 }
 
-<style type="text/css">
-    #slide {
-        display: block;
-        overflow: hidden;
-        width: 630px;
-        float: left;
-        position: relative;
-    }
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+    height: 100%;
+}
 
-    .news-ranking {
-        width: 630px;
-        float: left;
-        display: block;
-        margin-bottom: 0;
-    }
+.video-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
 
-        .news-ranking .news {
-            display: block;
-            float: left;
-            width: 390px;
-            border-bottom: 1px solid #030000;
-            background: #d5d1ce url(../../Content/images/bg-btn-news.png) top right repeat-x;
-        }
-        .news-ranking .hdtt {
-            display: block;
-            float: left;
-            width: 390px;
-            border-bottom: 1px solid #030000;
-            background: #d5d1ce url(../../Content/images/bg-btn-news.png) top right repeat-x;
-            
-        }
+.video-bg video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.6);
+}
 
-        .news-ranking .ranking {
-            position: relative;
-            display: block;
-            float: right;
-            width: 230px;
-            padding-top: 41px;
-            background: #d6d2d0 url(../../Content/images/bg-new-features.png) top left no-repeat;
-        }
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0,0,0,0.3), rgba(0,0,0,0.8));
+    z-index: 1;
+}
 
-    .news .list-news {
-        display: block;
-        overflow: hidden;
-        background: #d5d1ce;
-        clear: both;
-        padding: 11px 10px;
-        position: relative;
-        z-index: 1;
-        top: -1px;
-        height: 325px;
-    }
-    .hdtt .list-news {
-        display: block;
-        overflow: hidden;
-        background: #d5d1ce;
-        clear: both;
-        padding: 11px 10px;
-        position: relative;
-        z-index: 1;
-        top: -1px;
-        height: 325px;
-    }
+.hero {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding-top: 150px;
+    animation: fadeIn 1.5s ease;
+}
 
-         .list-news ul.list li a .time {
-            display: block;
-            overflow: hidden;
-            font-weight: 300;
-            display: inline;
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
+.hero h1 {
+    font-size: 60px;
+    color: #ffd700;
+    text-shadow: 0 0 30px #ff0000, 0 0 60px #ff6600;
+    margin-bottom: 10px;
+}
 
-         .list-news ul.list {
-            display: block;
-            overflow: hidden;
-            padding: 0 0 6px 0;
-        }
+.hero p {
+    font-size: 22px;
+    margin-top: 10px;
+    color: #ffcccc;
+}
 
-    .news ul.tab {
-        float: left;
-        display: block;
-        overflow: hidden;
-        padding: 0 0 0 0;
-        position: relative;
-        z-index: 2;
-        width: 100%;
-    }
+.btn-group {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
 
-    .new ul.tab li {
-        float: left;
-        display: initial;
-    }
+.btn {
+    padding: 14px 28px;
+    background: linear-gradient(90deg, #ff6600, #ff0000);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 18px;
+    box-shadow: 0 0 15px #ff0000;
+    transition: 0.3s ease;
+}
 
-    .news ul.tab li a {
-        display: block;
-        color: #FFF;
-        font-family: Roboto;
-        font-size: 14px;
-        font-weight: 500;
-        width: 120px;
-        text-align: left;
-        text-indent: -9999px;
-        height: 41px;
-        line-height: 41px;
-        border: 0px solid transparent;
-        background: url(../../Content/images/btn-news.png) top left no-repeat;
-    }
+.btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 25px #ffd700;
+}
 
-    .tin-tuc {
-    }
+footer {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    color: #aaa;
+}
 
-     .list-news .view {
-        /*display: none;*/
-        overflow: hidden;
-    }
-
-     .list-news ul.list li {
-        display: block;
-        overflow: hidden;
-        border-bottom: 1px solid #c4c1bf;
-        padding: 1px 0;
-    }
-
-         .list-news ul.list li:first-child {
-            padding: 0 0 7px 0;
-        }
-
-         .list-news ul.list li a {
-            display: block;
-            overflow: hidden;
-            font-weight: 500;
-            color: #000000;
-            height: 29px;
-            line-height: 29px;
-            position: relative;
-            padding-right: 30px;
-            padding-left: 20px;
-            font-weight: bold;
-            background: url(../../Content/images/arrow-1.png) left center no-repeat;
-        }
-
-         .list-news ul.list li:first-child a {
-            margin-bottom: 5px;
-            color: #790000;
-        }
-
-     .list-news ul.list li .cover {
-        display: block;
-        overflow: hidden;
-        float: left;
-        margin-right: 5px;
-    }
-     .list-news ul.list li .cover a{
-        height: 80px;
-        margin-bottom: 0px;
-        padding-right: 0;
-        padding-left: 0;
-        background: none;
-    }
-     .list-news ul.list li .cover img{
-        width: 110px;
-        height: 80px;
-        margin-right: 5px;
-        display: block;
-        overflow: hidden;
-    }
-
-    .news-ranking .ranking .popular {
-       
-        height: 338px;
-    }
-
-
-    #slide #news-carousel {
-        margin-bottom: 5px;
-    }
-    .carousel-indicators li {
-        border-radius: 0px;
-        border: 1px solid #602828;
-    }
-    .carousel-indicators .active {
-       background-color: #5f1c1c;
-    }
-
-    .hdtt-title {
-        height: 41px;
-        background: url(../../Content/images/bg-new-features.png) no-repeat;
-        color: #fff;
-        font-family: Roboto;
-        padding-top: 8px;
-        padding-left: 8px;
-        font-weight: bold;
-        text-decoration: none;
-        font-size: 18px;
-        text-shadow: 0 0 30px #000000;
-    }
-    .hdtt-title a{
-        height: 41px;
-        background: url(../../Content/images/bg-new-features.png) no-repeat;
-        color: #fff;
-        font-family: Roboto;
-        padding-top: 8px;
-        padding-left: 8px;
-        font-weight: bold;
-        text-decoration: none;
-        font-size: 18px;
-        text-shadow: 0 0 30px #000000;
-    }
-
-    .news-hdtt {
-        display: block;
-        float: left;
-        width: 390px;
-    }
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
 </style>
-<div id="slide">
-    <div id="news-carousel" class="carousel slide" data-ride="carousel">
-        
 
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner">
-            <div class="item active">
-                <img src="../../Content/images/latest_news_preview_8.jpg" alt="Los Angeles" style="width:100%">
-                <div class="carousel-caption">
-                    
-                </div>
-            </div>
+<div class="video-bg">
+    <video autoplay muted loop>
+        <source src="https://cdn.pixabay.com/vimeo/414517965/dragon-36813.mp4?width=1280&hash=da49f56461aa01b86da92ab5f5d9b4b4b1a87a2a" type="video/mp4">
+    </video>
+</div>
 
-            <div class="item">
-                <img src="../../Content/images/latest_news_preview_5.jpg" alt="Chicago" style="width:100%">
-                <div class="carousel-caption">
-                    
-                </div>
-            </div>
+<div class="overlay"></div>
 
-            
-
-			<div class="item">
-                <img src="../../Content/images/latest_news_preview_4.jpg" alt="New york" style="width:100%">
-                <div class="carousel-caption">
-                   
-                </div>
-            </div>
-        </div>
-
-
+<div class="hero">
+    <h1>Cửu Long Tranh Bá - EVOLUTION</h1>
+    <p>Máy chủ PK Free | Cày cuốc - Giao lưu - Đỉnh cao võ học</p>
+    <div class="btn-group">
+        <a href="/register" class="btn">Đăng ký</a>
+        <a href="/login" class="btn">Đăng nhập</a>
+        <a href="/download" class="btn">Tải game</a>
+        <a href="/recharge" class="btn">Nạp thẻ</a>
+        <a href="/event" class="btn">Vòng quay may mắn</a>
+        <a href="/giftcode" class="btn">Giftcode</a>
+        <a href="https://facebook.com" target="_blank" class="btn">Fanpage</a>
     </div>
 </div>
 
-
-
-
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-        
-    
-	
-    
-</section>
+<footer>
+    © 2025 Cửu Long Tranh Bá - EVOLUTION Server. All rights reserved.
+</footer>
